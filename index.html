@@ -1,0 +1,1181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Hai Rho — Character Reference Sheet</title>
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <rect width="100" height="100" fill="#f3eee5"/>
+    <g transform="translate(50 50)" font-family="Georgia, serif" font-style="italic" fill="#3a2a44" text-anchor="middle">
+      <text y="-2" font-size="28">Hai</text>
+      <text y="22" font-size="14" letter-spacing="2">RHO</text>
+    </g>
+  </svg>
+</template>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  :root {
+    /* paper tones */
+    --paper-cool:  oklch(0.975 0.004 240);
+    --paper-cream: oklch(0.972 0.012 80);
+    --paper-bone:  oklch(0.955 0.006 80);
+
+    /* ink tones */
+    --ink-coal:     oklch(0.20 0.012 60);
+    --ink-charcoal: oklch(0.28 0.008 240);
+
+    /* accents */
+    --acc-plum:   oklch(0.52 0.13 310);
+    --acc-indigo: oklch(0.42 0.07 250);
+    --acc-ember:  oklch(0.60 0.13 35);
+    --acc-bone:   oklch(0.45 0.01 80);
+
+    /* live tokens, overridden by JS */
+    --paper: var(--paper-cool);
+    --ink: var(--ink-coal);
+    --accent: var(--acc-plum);
+
+    --ink-08: color-mix(in oklab, var(--ink) 8%, transparent);
+    --ink-15: color-mix(in oklab, var(--ink) 15%, transparent);
+    --ink-30: color-mix(in oklab, var(--ink) 30%, transparent);
+    --ink-55: color-mix(in oklab, var(--ink) 55%, transparent);
+    --ink-75: color-mix(in oklab, var(--ink) 75%, transparent);
+
+    --display: "Instrument Serif", "Times New Roman", serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --body: "Manrope", system-ui, -apple-system, sans-serif;
+
+    --rule: 0.5px solid var(--ink-15);
+    --rule-strong: 0.5px solid var(--ink-30);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .sheet {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 56px 64px 80px;
+    position: relative;
+  }
+
+  /* ── Header ─────────────────────────────────────────── */
+  .top {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: end;
+    gap: 32px;
+    padding-bottom: 22px;
+    border-bottom: var(--rule-strong);
+  }
+  .top .corner {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+    line-height: 1.7;
+  }
+  .top .corner.right { text-align: right; }
+  .top .corner .k { color: var(--ink-30); }
+
+  .nameblock {
+    text-align: center;
+    line-height: 0.92;
+  }
+  .nameblock .kicker {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+    margin-bottom: 14px;
+  }
+  .nameblock h1 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 148px;
+    margin: 0;
+    letter-spacing: -0.02em;
+    line-height: 0.88;
+  }
+  .nameblock h1 em {
+    color: var(--accent);
+    font-style: italic;
+    font-weight: 400;
+  }
+  .nameblock .baybayin {
+    display: block;
+    margin: 14px auto 18px;
+    width: 240px;
+    height: auto;
+    opacity: 0.82;
+    mix-blend-mode: multiply;
+    filter: contrast(1.05);
+  }
+  .nameblock .sub {
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-75);
+  }
+  .nameblock .sub .dot {
+    display: inline-block;
+    width: 5px; height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+    transform: translateY(-2px);
+    margin: 0 14px;
+  }
+
+  /* ── Section heading ────────────────────────────────── */
+  .sect {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 32px;
+    align-items: baseline;
+    padding-bottom: 14px;
+    border-bottom: var(--rule);
+  }
+  .sect .num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+  .sect .num b { color: var(--accent); font-weight: 500; margin-right: 10px; }
+  .sect .title {
+    font-family: var(--display);
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .sect .meta {
+    justify-self: end;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+  .sect.with-meta { grid-template-columns: 220px 1fr auto; }
+
+  /* ── Plate (image cell) ────────────────────────────── */
+  .plate {
+    position: relative;
+    background:
+      linear-gradient(var(--ink-08) 0 0) center/100% 100% no-repeat,
+      var(--paper);
+    background:
+      radial-gradient(120% 90% at 50% 100%, var(--ink-08), transparent 70%),
+      var(--paper);
+    border: var(--rule);
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .plate::before {
+    /* corner tick marks */
+    content: "";
+    position: absolute; inset: 6px;
+    background:
+      linear-gradient(var(--ink-30), var(--ink-30)) 0 0/10px 0.5px no-repeat,
+      linear-gradient(var(--ink-30), var(--ink-30)) 0 0/0.5px 10px no-repeat,
+      linear-gradient(var(--ink-30), var(--ink-30)) 100% 0/10px 0.5px no-repeat,
+      linear-gradient(var(--ink-30), var(--ink-30)) 100% 0/0.5px 10px no-repeat,
+      linear-gradient(var(--ink-30), var(--ink-30)) 0 100%/10px 0.5px no-repeat,
+      linear-gradient(var(--ink-30), var(--ink-30)) 0 100%/0.5px 10px no-repeat,
+      linear-gradient(var(--ink-30), var(--ink-30)) 100% 100%/10px 0.5px no-repeat,
+      linear-gradient(var(--ink-30), var(--ink-30)) 100% 100%/0.5px 10px no-repeat;
+    pointer-events: none;
+  }
+  .plate img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+    mix-blend-mode: multiply;
+    filter: contrast(1.02);
+  }
+  .plate .tag {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+    z-index: 2;
+  }
+  .plate .tag b { color: var(--ink); font-weight: 500; margin-right: 8px; }
+  /* Face & detail plates: tag at top so it doesn't sit over the subject's body */
+  .grid-6 .plate .tag,
+  .grid-detail .plate .tag {
+    top: 10px;
+    bottom: auto;
+  }
+  .plate .stamp {
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-30);
+    z-index: 2;
+  }
+
+  /* ── Hero block ────────────────────────────────────── */
+  .hero {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 24px;
+  }
+  .hero .plate.main { height: 720px; }
+  .hero .side {
+    display: grid;
+    grid-template-rows: 1fr;
+    gap: 18px;
+  }
+  .hero .vitals { height: 100%; }
+  .vitals {
+    border: var(--rule);
+    padding: 22px 24px 24px;
+  }
+  .vitals .hd {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+    border-bottom: var(--rule);
+  }
+  .vitals dl { margin: 0; display: grid; grid-template-columns: 100px 1fr; gap: 10px 16px; }
+  .vitals dt {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+    padding-top: 3px;
+  }
+  .vitals dd {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+  .vitals dd .accent { color: var(--accent); }
+  .vitals dd em {
+    font-family: var(--display);
+    font-size: 17px;
+    font-style: italic;
+  }
+
+  /* ── Grids ─────────────────────────────────────────── */
+  .grid-4 {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  .grid-4 .plate { height: 520px; }
+
+  .grid-6 {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 14px;
+  }
+  .grid-6 .plate { height: 240px; }
+
+  .grid-detail {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: 1.1fr 1.4fr 1fr;
+    gap: 24px;
+  }
+  .grid-detail .plate { height: 360px; }
+
+  /* ── Palette section ──────────────────────────────── */
+  .palette-wrap {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .palgroup {
+    border: var(--rule);
+    padding: 22px 24px 24px;
+  }
+  .palgroup h3 {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 400;
+    margin: 0 0 4px;
+    font-size: 22px;
+  }
+  .palgroup .palhd {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+    border-bottom: var(--rule);
+  }
+  .swatch {
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 0;
+    border-bottom: var(--rule);
+  }
+  .swatch:last-child { border-bottom: 0; padding-bottom: 0; }
+  .swatch .chip {
+    width: 44px; height: 30px;
+    border-radius: 2px;
+    box-shadow: 0 0 0 0.5px var(--ink-15) inset;
+  }
+  .swatch .name {
+    font-size: 13px;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+  .swatch .hex {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-55);
+    letter-spacing: 0.04em;
+  }
+
+  /* eye palette: strip variant */
+  .eyestrip {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border: var(--rule);
+  }
+  .eyestrip > div {
+    aspect-ratio: 1 / 1.2;
+    border-right: var(--rule);
+    position: relative;
+  }
+  .eyestrip > div:last-child { border-right: 0; }
+  .eyestrip > div::after {
+    content: attr(data-hex);
+    position: absolute;
+    left: 8px; bottom: 6px;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.04em;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+
+  /* ── Glyph library ──────────────────────────────── */
+  .glyphs {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1fr;
+    gap: 24px;
+  }
+  .glyph-card {
+    border: var(--rule);
+    padding: 22px 24px 18px;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 16px;
+    min-height: 320px;
+    position: relative;
+  }
+  .glyph-card .corner-no {
+    position: absolute;
+    top: 14px; right: 18px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--ink-30);
+  }
+  .glyph {
+    width: 100%;
+    height: 100%;
+    background: oklch(0.32 0.05 245);
+    -webkit-mask-position: center;
+            mask-position: center;
+    -webkit-mask-size: contain;
+            mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+    -webkit-mask-mode: luminance;
+            mask-mode: luminance;
+  }
+  .glyph.wide {
+    -webkit-mask-size: 100% auto;
+            mask-size: 100% auto;
+  }
+  .glyph-meta {
+    border-top: var(--rule);
+    padding-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 6px 14px;
+  }
+  .glyph-meta .name {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1;
+  }
+  .glyph-meta .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+  .glyph-meta .desc {
+    grid-column: 1 / -1;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--ink-75);
+    text-wrap: pretty;
+  }
+
+  /* ── Notes column ─────────────────────────────────── */
+  .notes {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .note h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+    font-weight: 500;
+  }
+  .note p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink-75);
+    text-wrap: pretty;
+  }
+  .note p + p { margin-top: 8px; }
+
+  /* ── Footer ────────────────────────────────────────── */
+  .foot {
+    margin-top: 72px;
+    padding-top: 18px;
+    border-top: var(--rule-strong);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+  .foot .center {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--ink-75);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .foot .right { text-align: right; }
+
+  /* ── Colophon ─────────────────────────────────────── */
+  .colophon {
+    margin-top: 56px;
+    padding-top: 22px;
+    border-top: var(--rule);
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .colophon .hd {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+  .colophon .hd b { color: var(--accent); font-weight: 500; margin-right: 10px; }
+  .colophon dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 10px 24px;
+    align-items: baseline;
+  }
+  .colophon dt {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-55);
+  }
+  .colophon dd {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .colophon dd .by { color: var(--ink-55); }
+  .colophon a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 0.5px solid color-mix(in oklab, var(--accent) 40%, transparent);
+    padding-bottom: 1px;
+    transition: border-color .15s ease;
+  }
+  .colophon a:hover { border-bottom-color: var(--accent); }
+
+  /* ── Footer ─────────────────────────────────────────── */
+  .crosshair {
+    position: absolute;
+    width: 18px; height: 18px;
+    pointer-events: none;
+  }
+  .crosshair::before, .crosshair::after {
+    content: ""; position: absolute; background: var(--ink-30);
+  }
+  .crosshair::before { left: 50%; top: 0; bottom: 0; width: 0.5px; transform: translateX(-50%); }
+  .crosshair::after  { top: 50%; left: 0; right: 0; height: 0.5px; transform: translateY(-50%); }
+  .crosshair.tl { top: 28px; left: 28px; }
+  .crosshair.tr { top: 28px; right: 28px; }
+  .crosshair.bl { bottom: 40px; left: 28px; }
+  .crosshair.br { bottom: 40px; right: 28px; }
+
+  @media (max-width: 900px) {
+    .sheet { padding: 24px 18px 40px; }
+
+    /* Hide decorative chrome that depends on absolute positioning at full size */
+    .crosshair { display: none; }
+
+    /* ── Top header: stack the three columns ── */
+    .top {
+      grid-template-columns: 1fr;
+      gap: 18px;
+      padding-bottom: 16px;
+      text-align: left;
+    }
+    .top .corner,
+    .top .corner.right { text-align: left; }
+    .top .corner > div { display: inline; margin-right: 14px; }
+    .top .corner > div + div::before { content: ""; }
+
+    .nameblock { text-align: center; }
+    .nameblock .kicker {
+      font-size: 9.5px;
+      letter-spacing: 0.24em;
+      margin-bottom: 10px;
+    }
+    .nameblock .baybayin { width: 60vw; max-width: 240px; margin: 8px auto 12px; }
+    .nameblock h1 {
+      font-size: clamp(72px, 22vw, 132px);
+      line-height: 0.9;
+    }
+    .nameblock .sub {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      margin-top: 12px;
+    }
+    .nameblock .sub .dot { margin: 0 10px; }
+
+    /* ── Section headings: stack number / title / meta ── */
+    .sect,
+    .sect.with-meta {
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 36px;
+      padding-bottom: 12px;
+    }
+    .sect .meta { justify-self: start; }
+    .sect .title { font-size: 24px; line-height: 1.1; }
+
+    /* ── Hero block: single column ── */
+    .hero {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .hero .plate.main { height: 78vw; min-height: 360px; max-height: 560px; }
+
+    .vitals { padding: 18px 18px 20px; }
+    .vitals dl { grid-template-columns: 90px 1fr; gap: 8px 14px; }
+    .vitals dd { font-size: 13px; }
+    .vitals dt { font-size: 9.5px; }
+
+    /* ── Body turnaround: 2 columns ── */
+    .grid-4 {
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .grid-4 .plate { height: 56vw; max-height: 420px; }
+
+    /* ── Face plates: 3 across, then wrap ── */
+    .grid-6 {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .grid-6 .plate { height: 32vw; min-height: 130px; max-height: 220px; }
+
+    /* ── Detail/silhouette ── */
+    .grid-detail {
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .grid-detail .plate { height: 70vw !important; max-height: 360px; }
+
+    /* ── Palette: single column ── */
+    .palette-wrap {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .palgroup { padding: 18px 20px 20px; }
+
+    /* ── Glyph library: single column ── */
+    .glyphs {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .glyph-card { min-height: 260px; padding: 18px 20px 16px; }
+
+    /* ── Marking notes: 2 columns ── */
+    .notes {
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .note p { font-size: 12.5px; }
+
+    /* ── Footer: stack ── */
+    .foot {
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 44px;
+      text-align: center;
+    }
+    .foot .right { text-align: center; }
+
+    /* ── Colophon ── */
+    .colophon {
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 36px;
+    }
+    .colophon dl { grid-template-columns: 130px 1fr; gap: 8px 18px; }
+    .colophon dd { font-size: 12.5px; }
+  }
+
+  /* Phones (≤ ~480px) — tighter still */
+  @media (max-width: 480px) {    .sheet { padding: 18px 14px 32px; }
+
+    .top .corner { font-size: 9.5px; }
+    .top .corner > div { display: block; margin-right: 0; }
+
+    .nameblock h1 { font-size: clamp(64px, 24vw, 104px); }
+    .nameblock .sub {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 12px;
+    }
+    .nameblock .sub .dot { display: none; }
+
+    /* Body turnaround: single column on phones */
+    .grid-4 {
+      grid-template-columns: 1fr;
+    }
+    .grid-4 .plate { height: 90vw; max-height: 520px; }
+
+    /* Face plates: 2 across */
+    .grid-6 { grid-template-columns: repeat(2, 1fr); }
+    .grid-6 .plate { height: 46vw; max-height: 260px; }
+
+    /* Eye palette strip — keep readable */
+    .eyestrip > div::after { font-size: 8.5px; }
+
+    .notes { grid-template-columns: 1fr; }
+
+    .vitals dl { grid-template-columns: 84px 1fr; }
+  }
+
+  @media print {
+    body { background: var(--paper); }
+    .sheet { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+/* ── Tweaks panel (inlined) ──────────────────────────── */
+
+const STORAGE_KEY = "hai-rho-tweaks";
+
+function useTweaks(defaults) {
+  const [state, setState] = React.useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      return saved ? { ...defaults, ...saved } : { ...defaults };
+    } catch {
+      return { ...defaults };
+    }
+  });
+
+  const setTweak = React.useCallback((key, value) => {
+    setState(prev => {
+      const next = { ...prev, [key]: value };
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  }, []);
+
+  return [state, setTweak];
+}
+
+function TweaksPanel({ title, children }) {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div style={{
+      position: "fixed", bottom: 20, right: 20, zIndex: 9999,
+      fontFamily: "var(--mono)", fontSize: 11,
+    }}>
+      {open && (
+        <div style={{
+          background: "var(--paper)", border: "0.5px solid var(--ink-30)",
+          padding: "16px 18px 18px", marginBottom: 8, minWidth: 220,
+          boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
+        }}>
+          <div style={{ fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase",
+            color: "var(--ink-55)", marginBottom: 14, fontSize: 10 }}>{title}</div>
+          {children}
+        </div>
+      )}
+      <button onClick={() => setOpen(o => !o)} style={{
+        display: "block", marginLeft: "auto",
+        background: "var(--paper)", border: "0.5px solid var(--ink-30)",
+        color: "var(--ink-55)", fontFamily: "var(--mono)", fontSize: 10,
+        letterSpacing: "0.14em", textTransform: "uppercase",
+        padding: "6px 12px", cursor: "pointer",
+      }}>
+        {open ? "Close" : "Tweaks"}
+      </button>
+    </div>
+  );
+}
+
+function TweakSection({ label }) {
+  return (
+    <div style={{
+      fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase",
+      color: "var(--accent)", fontSize: 9.5, marginTop: 12, marginBottom: 6,
+    }}>{label}</div>
+  );
+}
+
+function TweakRadio({ label, value, options, onChange }) {
+  return (
+    <div style={{ marginBottom: 4 }}>
+      <div style={{ color: "var(--ink-55)", letterSpacing: "0.12em",
+        textTransform: "uppercase", fontSize: 9.5, marginBottom: 5 }}>{label}</div>
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+        {options.map(opt => (
+          <button key={opt} onClick={() => onChange(opt)} style={{
+            padding: "3px 10px", fontSize: 10, letterSpacing: "0.1em",
+            textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--mono)",
+            background: value === opt ? "var(--accent)" : "transparent",
+            color: value === opt ? "var(--paper)" : "var(--ink-55)",
+            border: value === opt ? "0.5px solid var(--accent)" : "0.5px solid var(--ink-30)",
+          }}>
+            {opt}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+</script>
+<script type="text/babel">
+
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "paper": "cool",
+  "ink": "coal",
+  "accent": "plum"
+}/*EDITMODE-END*/;
+
+const FUR = [
+{ name: "Primary", hex: "#59574E" },
+{ name: "Secondary", hex: "#BBB8A7" },
+{ name: "Dark", hex: "#312F29" },
+{ name: "Accent", hex: "#223644" }];
+
+const BODY = [
+{ name: "Palm", hex: "#775954" },
+{ name: "Beans", hex: "#582720" },
+{ name: "Nose", hex: "#5D170D" },
+{ name: "Nails", hex: "#77704D" },
+{ name: "Ears Inner", hex: "#944C4C" },
+{ name: "Hair", hex: "#FFF7D1" }];
+
+const EYES = ["#000000", "#150B18", "#5B377C", "#8A56BF", "#D088F1"];
+
+function Swatch({ name, hex }) {
+  return (
+    <div className="swatch">
+      <div className="chip" style={{ background: hex }} />
+      <div className="name">{name}</div>
+      <div className="hex">{hex.toUpperCase()}</div>
+    </div>);
+
+}
+
+function App() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  React.useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty("--paper", `var(--paper-${t.paper})`);
+    root.style.setProperty("--ink", `var(--ink-${t.ink})`);
+    root.style.setProperty("--accent", `var(--acc-${t.accent})`);
+  }, [t.paper, t.ink, t.accent]);
+
+  return (
+    <div className="sheet">
+      <div className="crosshair tl" />
+      <div className="crosshair tr" />
+      <div className="crosshair bl" />
+      <div className="crosshair br" />
+
+      {/* ─────────── Header ─────────── */}
+      <header className="top">
+        <div className="corner">
+          <div><span className="k">Doc /</span> Character Reference</div>
+          <div><span className="k">Rev. /</span> 01 — 2026.05</div>
+          <div><span className="k">Sheet /</span> 01 of 01</div>
+        </div>
+        <div className="nameblock">
+          <div className="kicker">Character Reference Sheet</div>
+          <img className="baybayin" src="images/hairo-baybayin.png" alt="Hai Rho written in Baybayin script" />
+          <h1>Hai <em>Rho</em></h1>
+          <div className="sub">
+            Civet <span className="dot" />
+            Asian Palm
+          </div>
+        </div>
+        <div className="corner right">
+          <div><span className="k">Subject /</span> Hai Rho</div>
+          <div><span className="k">Species /</span> Paradoxurus</div>
+          <div><span className="k">Designation /</span> OC · Solo</div>
+        </div>
+      </header>
+
+      {/* ─────────── Section I: Plates ─────────── */}
+      <div className="sect with-meta">
+        <div className="num"><b>I</b>Body Studies</div>
+        <div className="title">Full <i style={{ fontFamily: "var(--display)", fontStyle: "italic" }}>turnaround</i> and proportion.</div>
+        <div className="meta">04 plates · neutral pose</div>
+      </div>
+
+      <div className="hero">
+        <div className="plate main">
+          <span className="stamp">REF · 01</span>
+          <span className="tag"><b>01</b> Three-Quarter</span>
+          <img src="images/01 Three-Fourths.png" alt="Hai Rho — three-quarter view" />
+        </div>
+        <div className="side">
+          <div className="vitals">
+            <div className="hd">Vitals</div>
+            <dl>
+              <dt>Name</dt>     <dd><em>Hai Rho</em></dd>
+              <dt>Species</dt>  <dd>Civet <span style={{ color: "var(--ink-55)" }}>· Paradoxurus hermaphroditus</span></dd>
+              <dt>Height</dt>   <dd>160 cm <span style={{ color: "var(--ink-55)" }}>· 5′3″</span></dd>
+              <dt>Build</dt>    <dd>Lithe, athletic; long tail (~1.2× body)</dd>
+              <dt>Hair</dt>     <dd>Platinum, short, swept right</dd>
+              <dt>Eyes</dt>     <dd><span className="accent">Violet</span>, large, rounded</dd>
+              <dt>Markings</dt> <dd>Indigo glyphs — face mask, neck collar, dorsal stripes, hip florets</dd>
+              <dt>Limbs</dt>    <dd>Charcoal "gloves" &amp; "stockings" with white fur fringe</dd>
+              <dt>Tail</dt>     <dd>Banded, tufted, blue dorsal stripe</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid-4">
+        <div className="plate">
+          <span className="stamp">REF · 02</span>
+          <span className="tag"><b>A</b> Front</span>
+          <img src="images/00 Front.png" alt="Front view" />
+        </div>
+        <div className="plate">
+          <span className="stamp">REF · 03</span>
+          <span className="tag"><b>B</b> Side</span>
+          <img src="images/02 Side.png" alt="Side view" />
+        </div>
+        <div className="plate">
+          <span className="stamp">REF · 04</span>
+          <span className="tag"><b>C</b> Side · Alt</span>
+          <img src="images/04 Side 2.png" alt="Side alternate view" />
+        </div>
+        <div className="plate">
+          <span className="stamp">REF · 05</span>
+          <span className="tag"><b>D</b> Back</span>
+          <img src="images/03 Back.png" alt="Back view" />
+        </div>
+      </div>
+
+      {/* ─────────── Section II: Face ─────────── */}
+      <div className="sect with-meta">
+        <div className="num"><b>II</b>Face Studies</div>
+        <div className="title">Mask, <i style={{ fontFamily: "var(--display)", fontStyle: "italic" }}>expression</i>, structure.</div>
+        <div className="meta">06 plates · ear-up neutral</div>
+      </div>
+
+      <div className="grid-6">
+        <div className="plate">
+          <span className="tag"><b>i</b> Front</span>
+          <img src="images/05 Face Front.png" alt="Face front" />
+        </div>
+        <div className="plate">
+          <span className="tag"><b>ii</b> 3/4</span>
+          <img src="images/07 Face Three-Fourths.png" alt="Face 3/4" />
+        </div>
+        <div className="plate">
+          <span className="tag"><b>iii</b> Side</span>
+          <img src="images/06 Face Side.png" alt="Face side" />
+        </div>
+        <div className="plate">
+          <span className="tag"><b>iv</b> No Hair</span>
+          <img src="images/08 Face No Hair.png" alt="Face no hair — mask visibility" />
+        </div>
+        <div className="plate">
+          <span className="tag"><b>v</b> Smile · 3/4</span>
+          <img src="images/10 Face Smile Three-Fourths.png" alt="Smile 3/4" />
+        </div>
+        <div className="plate">
+          <span className="tag"><b>vi</b> Smile · Front</span>
+          <img src="images/11 Face Smile Front.png" alt="Smile front" />
+        </div>
+      </div>
+
+      {/* ─────────── Section III: Details ─────────── */}
+      <div className="sect with-meta">
+        <div className="num"><b>III</b>Detail &amp; Silhouette</div>
+        <div className="title">Eyes, <i style={{ fontFamily: "var(--display)", fontStyle: "italic" }}>palm</i>, read.</div>
+        <div className="meta">close studies</div>
+      </div>
+
+      <div className="grid-detail">
+        <div className="plate" style={{ height: "360px" }}>
+          <span className="tag"><b>α</b> Silhouette &amp; Eyes</span>
+          <img src="images/09 Eyes Isolated.png" alt="Silhouette with isolated eyes" />
+        </div>
+        <div className="plate" style={{ height: "360px" }}>
+          <span className="tag"><b>β</b> Expression · Bared</span>
+          <img src="images/11 Face Smile Front.png" alt="Bared teeth expression" />
+        </div>
+        <div className="plate" style={{ height: "360px", background: "var(--paper)" }}>
+          <span className="tag"><b>γ</b> Palm &amp; Beans</span>
+          <img src="images/12 Palm Beans.png" alt="Palm and beans" style={{ height: "92%" }} />
+        </div>
+      </div>
+
+      {/* ─────────── Section IV: Palette ─────────── */}
+      <div className="sect with-meta">
+        <div className="num"><b>IV</b>Flat Color Palette</div>
+        <div className="title">Reference <i style={{ fontFamily: "var(--display)", fontStyle: "italic" }}>fills</i>.</div>
+        <div className="meta">no shading — pure swatches</div>
+      </div>
+
+      <div className="palette-wrap">
+        <div className="palgroup">
+          <div className="palhd">Group 01 · Fur</div>
+          <h3>Pelt</h3>
+          <div style={{ height: 14 }} />
+          {FUR.map((s) => <Swatch key={s.hex} {...s} />)}
+        </div>
+        <div className="palgroup">
+          <div className="palhd">Group 02 · Body</div>
+          <h3>Skin &amp; Keratin</h3>
+          <div style={{ height: 14 }} />
+          {BODY.map((s) => <Swatch key={s.hex} {...s} />)}
+        </div>
+        <div className="palgroup">
+          <div className="palhd">Group 03 · Eyes</div>
+          <h3>Iris Gradient</h3>
+          <p style={{ margin: "6px 0 0", fontSize: 13, lineHeight: 1.5, color: "var(--ink-55)" }}>
+            Five-stop radial. Pupil ⟶ rim, dark to bright.
+          </p>
+          <div className="eyestrip">
+            {EYES.map((hex) =>
+            <div key={hex} style={{ background: hex }} data-hex={hex.toUpperCase()} />
+            )}
+          </div>
+          <div style={{ marginTop: 18, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 16px", fontFamily: "var(--mono)", fontSize: 10.5, color: "var(--ink-55)", letterSpacing: "0.06em" }}>
+            <div>01 · Pupil</div><div style={{ textAlign: "right" }}>#000000</div>
+            <div>02 · Inner</div><div style={{ textAlign: "right" }}>#150B18</div>
+            <div>03 · Mid</div><div style={{ textAlign: "right" }}>#5B377C</div>
+            <div>04 · Outer</div><div style={{ textAlign: "right" }}>#8A56BF</div>
+            <div>05 · Rim</div><div style={{ textAlign: "right" }}>#D088F1</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ─────────── Section V: Glyph Library ─────────── */}
+      <div className="sect with-meta">
+        <div className="num"><b>V</b>Glyph Library</div>
+        <div className="title">Body <i style={{ fontFamily: "var(--display)", fontStyle: "italic" }}>marks</i> &amp; tattoos.</div>
+        <div className="meta">3 sigils · indigo ink</div>
+      </div>
+
+      <div className="glyphs">
+        <div className="glyph-card">
+          <span className="corner-no">G · 01</span>
+          <div className="glyph" style={{ WebkitMaskImage: "url(images/glyph-sun-moon.png)", maskImage: "url(images/glyph-sun-moon.png)" }} />
+          <div className="glyph-meta">
+            <div className="name">Sun &amp; Moon</div>
+            <div className="tag">L. shoulder</div>
+            <div className="desc">Primary sigil — half-moon cradled inside a sunburst mandala. Tattooed across the right deltoid, the largest of the three marks.</div>
+          </div>
+        </div>
+        <div className="glyph-card">
+          <span className="corner-no">G · 02</span>
+          <div className="glyph" style={{ WebkitMaskImage: "url(images/glyph-sun-moon-2.png)", maskImage: "url(images/glyph-sun-moon-2.png)" }} />
+          <div className="glyph-meta">
+            <div className="name">Radiant Disc</div>
+            <div className="tag">R. shoulder</div>
+            <div className="desc">Twelve-spoked wheel within a wheel. A simpler echo of G · 01, mirrored on the opposite shoulder.</div>
+          </div>
+        </div>
+        <div className="glyph-card">
+          <span className="corner-no">G · 03</span>
+          <div className="glyph wide" style={{ WebkitMaskImage: "url(images/glyph-snake-skin.png)", maskImage: "url(images/glyph-snake-skin.png)" }} />
+          <div className="glyph-meta">
+            <div className="name">Scale Band</div>
+            <div className="tag">Both biceps · cuff</div>
+            <div className="desc">A continuous snake-skin band that wraps each upper arm just below the shoulder mark. Two parallel rules cap top and bottom.</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ─────────── Section VI: Notes ─────────── */}
+      <div className="sect with-meta">
+        <div className="num"><b>VI</b>Marking Notes</div>
+        <div className="title">Glyph <i style={{ fontFamily: "var(--display)", fontStyle: "italic" }}>placement</i> guide.</div>
+        <div className="meta">indigo · #223644</div>
+      </div>
+
+      <div className="notes">
+        <div className="note">
+          <h4>Face Mask</h4>
+          <p>Continuous indigo band wraps both eyes, drops to a hook beside each cheek and meets the snout at a flat tab above the nose.</p>
+          <p>Forehead carries two parallel drips between the ears.</p>
+        </div>
+        <div className="note">
+          <h4>Neck &amp; Collar</h4>
+          <p>Dotted "necklace" of dots descending in size, anchored by a V-shaped chest emblem just below the clavicle.</p>
+        </div>
+        <div className="note">
+          <h4>Torso &amp; Hips</h4>
+          <p>Symmetric floret over the lower belly. Hip rosettes echo cloud-leopard rings; right shoulder bears a fine mandala band-tattoo.</p>
+        </div>
+        <div className="note">
+          <h4>Dorsal &amp; Tail</h4>
+          <p>Five vertical bars trail the spine; tail carries a continuous dorsal stripe and tufted dark bands toward the tip.</p>
+        </div>
+      </div>
+
+      {/* ─────────── Colophon ─────────── */}
+      <section className="colophon">
+        <div className="hd"><b>¶</b>Colophon &amp; Credits</div>
+        <dl>
+          <dt>Base Model</dt>
+          <dd>
+            <a href="https://milofox.gumroad.com/l/KitFox" target="_blank" rel="noopener noreferrer">Kitfox</a>
+            <span className="by"> · by MiloFox</span>
+          </dd>
+          <dt>Retexture &amp; Mods</dt>
+          <dd>Hai Rho <span className="by">· character owner</span></dd>
+          <dt>Sheet Design</dt>
+          <dd>One-page editorial reference · v01 <span className="by">· 2026</span></dd>
+        </dl>
+      </section>
+
+      {/* ─────────── Footer ─────────── */}
+      <footer className="foot">
+        <div>Hai Rho · OC Reference</div>
+        <div className="center">— end of sheet —</div>
+        <div className="right">Plate count · 13 · v01</div>
+      </footer>
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Paper" />
+        <TweakRadio label="Tone" value={t.paper}
+        options={["cool", "cream", "bone"]}
+        onChange={(v) => setTweak("paper", v)} />
+        <TweakSection label="Ink" />
+        <TweakRadio label="Tone" value={t.ink}
+        options={["coal", "charcoal"]}
+        onChange={(v) => setTweak("ink", v)} />
+        <TweakSection label="Accent" />
+        <TweakRadio label="Hue" value={t.accent}
+        options={["plum", "indigo", "ember", "bone"]}
+        onChange={(v) => setTweak("accent", v)} />
+      </TweaksPanel>
+    </div>);
+
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

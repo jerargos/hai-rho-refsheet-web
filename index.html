@@ -309,6 +309,14 @@
   }
   .grid-4 .plate { height: 520px; }
 
+  .grid-5 {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+  }
+  .grid-5 .plate { height: 520px; }
+
   .grid-6 {
     margin-top: 28px;
     display: grid;
@@ -655,6 +663,13 @@
     }
     .grid-4 .plate { height: 56vw; max-height: 420px; }
 
+    .grid-5 {
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .grid-5 .plate { height: 56vw; max-height: 420px; }
+
     /* ── Face plates: 3 across, then wrap ── */
     .grid-6 {
       grid-template-columns: repeat(3, 1fr);
@@ -734,6 +749,11 @@
       grid-template-columns: 1fr;
     }
     .grid-4 .plate { height: 90vw; max-height: 520px; }
+
+    .grid-5 {
+      grid-template-columns: 1fr;
+    }
+    .grid-5 .plate { height: 90vw; max-height: 520px; }
 
     /* Face plates: 2 across */
     .grid-6 { grid-template-columns: repeat(2, 1fr); }
@@ -923,14 +943,14 @@ function App() {
       <div className="sect with-meta">
         <div className="num"><b>I</b>Body Studies</div>
         <div className="title">Full <i style={{ fontFamily: "var(--display)", fontStyle: "italic" }}>turnaround</i> and proportion.</div>
-        <div className="meta">04 plates · neutral pose</div>
+        <div className="meta">05 plates · neutral pose</div>
       </div>
 
       <div className="hero">
         <div className="plate main">
           <span className="stamp">REF · 01</span>
-          <span className="tag"><b>01</b> Three-Quarter</span>
-          <img src="images/01 Three-Fourths.png" alt="Hai Rho — three-quarter view" />
+          <span className="tag"><b>01</b> Pose · Smile</span>
+          <img src="images/13 Pose Smile.png" alt="Hai Rho — pose smile" />
         </div>
         <div className="side">
           <div className="vitals">
@@ -950,25 +970,30 @@ function App() {
         </div>
       </div>
 
-      <div className="grid-4">
+      <div className="grid-5">
         <div className="plate">
           <span className="stamp">REF · 02</span>
-          <span className="tag"><b>A</b> Front</span>
-          <img src="images/00 Front.png" alt="Front view" />
+          <span className="tag"><b>A</b> Three-Quarter</span>
+          <img src="images/01 Three-Fourths.png" alt="Three-quarter view" />
         </div>
         <div className="plate">
           <span className="stamp">REF · 03</span>
-          <span className="tag"><b>B</b> Side</span>
-          <img src="images/02 Side.png" alt="Side view" />
+          <span className="tag"><b>B</b> Front</span>
+          <img src="images/00 Front.png" alt="Front view" />
         </div>
         <div className="plate">
           <span className="stamp">REF · 04</span>
-          <span className="tag"><b>C</b> Side · Alt</span>
-          <img src="images/04 Side 2.png" alt="Side alternate view" />
+          <span className="tag"><b>C</b> Side</span>
+          <img src="images/02 Side.png" alt="Side view" />
         </div>
         <div className="plate">
           <span className="stamp">REF · 05</span>
-          <span className="tag"><b>D</b> Back</span>
+          <span className="tag"><b>D</b> Side · Alt</span>
+          <img src="images/04 Side 2.png" alt="Side alternate view" />
+        </div>
+        <div className="plate">
+          <span className="stamp">REF · 06</span>
+          <span className="tag"><b>E</b> Back</span>
           <img src="images/03 Back.png" alt="Back view" />
         </div>
       </div>

@@ -17,6 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
@@ -385,7 +386,11 @@
     font-size: 11px;
     color: var(--ink-55);
     letter-spacing: 0.04em;
+    cursor: pointer;
+    user-select: none;
+    transition: color .15s;
   }
+  .swatch .hex:hover { color: var(--ink); }
 
   /* eye palette: strip variant */
   .eyestrip {
@@ -438,7 +443,7 @@
   .glyph {
     width: 100%;
     height: 100%;
-    background: oklch(0.32 0.05 245);
+    background: #223644;
     -webkit-mask-position: center;
             mask-position: center;
     -webkit-mask-size: contain;
@@ -842,6 +847,21 @@ function TweakSection({ label }) {
   );
 }
 
+function TweakSlider({ label, value, min, max, step, onChange }) {
+  return (
+    <div style={{ marginBottom: 8 }}>
+      <div style={{ display: "flex", justifyContent: "space-between",
+        color: "var(--ink-55)", letterSpacing: "0.12em", textTransform: "uppercase",
+        fontSize: 9.5, marginBottom: 4 }}>
+        <span>{label}</span><span style={{ color: "var(--ink)" }}>{value.toFixed(1)}</span>
+      </div>
+      <input type="range" min={min} max={max} step={step} value={value}
+        onChange={e => onChange(parseFloat(e.target.value))}
+        style={{ width: "100%", accentColor: "var(--accent)", margin: 0 }} />
+    </div>
+  );
+}
+
 function TweakRadio({ label, value, options, onChange }) {
   return (
     <div style={{ marginBottom: 4 }}>
@@ -873,6 +893,40 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "accent": "plum"
 }/*EDITMODE-END*/;
 
+function CopyHex({ hex, className, style }) {
+  const [copied, setCopied] = React.useState(false);
+  function handleClick() {
+    navigator.clipboard.writeText(hex.toUpperCase()).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  }
+  return (
+    <span className={className} onClick={handleClick} title="Click to copy"
+      style={{ cursor: 'pointer', userSelect: 'none', transition: 'color .15s', ...style }}>
+      {copied ? 'Copied!' : hex.toUpperCase()}
+    </span>
+  );
+}
+
+function EyeChip({ hex }) {
+  const [copied, setCopied] = React.useState(false);
+  function handleClick() {
+    navigator.clipboard.writeText(hex.toUpperCase()).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  }
+  return (
+    <div
+      style={{ background: hex, cursor: 'pointer' }}
+      data-hex={copied ? 'Copied!' : hex.toUpperCase()}
+      onClick={handleClick}
+      title="Click to copy"
+    />
+  );
+}
+
 const FUR = [
 { name: "Primary", hex: "#59574E" },
 { name: "Secondary", hex: "#BBB8A7" },
@@ -894,13 +948,18 @@ function Swatch({ name, hex }) {
     <div className="swatch">
       <div className="chip" style={{ background: hex }} />
       <div className="name">{name}</div>
-      <div className="hex">{hex.toUpperCase()}</div>
+      <CopyHex hex={hex} className="hex" />
     </div>);
 
 }
 
 function App() {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [show3D, setShow3D] = React.useState(false);
+  const modelViewerRef = React.useRef(null);
+  const origEmissive = React.useRef(null);
+  const [emissiveBoost, setEmissiveBoost] = React.useState(3);
+  const [exposure, setExposure] = React.useState(1.2);
 
   React.useEffect(() => {
     const root = document.documentElement;
@@ -908,6 +967,31 @@ function App() {
     root.style.setProperty("--ink", `var(--ink-${t.ink})`);
     root.style.setProperty("--accent", `var(--acc-${t.accent})`);
   }, [t.paper, t.ink, t.accent]);
+
+  // Store original emissive factors when model loads, then apply initial boost
+  React.useEffect(() => {
+    if (!show3D) { origEmissive.current = null; return; }
+    const mv = modelViewerRef.current;
+    if (!mv) return;
+    const handleLoad = () => {
+      origEmissive.current = mv.model.materials.map(mat => ({
+        mat, orig: [...mat.emissiveFactor],
+      }));
+      origEmissive.current.forEach(({ mat, orig }) =>
+        mat.setEmissiveFactor(orig.map(v => v * emissiveBoost))
+      );
+    };
+    mv.addEventListener('load', handleLoad);
+    return () => mv.removeEventListener('load', handleLoad);
+  }, [show3D]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Re-apply boost from stored originals whenever the slider changes
+  React.useEffect(() => {
+    if (!origEmissive.current) return;
+    origEmissive.current.forEach(({ mat, orig }) =>
+      mat.setEmissiveFactor(orig.map(v => v * emissiveBoost))
+    );
+  }, [emissiveBoost]);
 
   return (
     <div className="sheet">
@@ -925,7 +1009,7 @@ function App() {
         </div>
         <div className="nameblock">
           <div className="kicker">Character Reference Sheet</div>
-          <img className="baybayin" src="images/hairo-baybayin.png" alt="Hai Rho written in Baybayin script" />
+          <img className="baybayin" src="assets/images/hairo-baybayin.png" alt="Hai Rho written in Baybayin script" />
           <h1>Hai <em>Rho</em></h1>
           <div className="sub">
             Civet <span className="dot" />
@@ -949,8 +1033,40 @@ function App() {
       <div className="hero">
         <div className="plate main">
           <span className="stamp">REF · 01</span>
-          <span className="tag"><b>01</b> Pose · Smile</span>
-          <img src="images/13 Pose Smile.png" alt="Hai Rho — pose smile" />
+          <span className="tag"><b>01</b> {show3D ? '3D · Interactive' : 'Pose · Smile'}</span>
+          <button
+            onClick={() => setShow3D(s => !s)}
+            style={{
+              position: 'absolute', bottom: 10, right: 12, zIndex: 3,
+              fontFamily: 'var(--mono)', fontSize: 10,
+              letterSpacing: '0.14em', textTransform: 'uppercase',
+              background: show3D ? 'var(--accent)' : 'var(--paper)',
+              color: show3D ? 'var(--paper)' : 'var(--ink-55)',
+              border: `0.5px solid ${show3D ? 'var(--accent)' : 'var(--ink-30)'}`,
+              padding: '4px 10px', cursor: 'pointer',
+            }}
+          >
+            {show3D ? '2D' : '3D'}
+          </button>
+          {show3D ? (
+            <model-viewer
+              ref={modelViewerRef}
+              src="assets/HaiRho_Civet_00.glb"
+              alt="Hai Rho 3D model"
+              auto-rotate=""
+              camera-controls=""
+              shadow-intensity="1"
+              exposure={`${exposure}`}
+              style={{
+                width: '100%', height: '100%',
+                position: 'absolute', top: 0, left: 0,
+                zIndex: 1,
+                background: 'var(--paper)',
+              }}
+            />
+          ) : (
+            <img src="assets/images/13 Pose Smile.png" alt="Hai Rho — pose smile" />
+          )}
         </div>
         <div className="side">
           <div className="vitals">
@@ -974,27 +1090,27 @@ function App() {
         <div className="plate">
           <span className="stamp">REF · 02</span>
           <span className="tag"><b>A</b> Three-Quarter</span>
-          <img src="images/01 Three-Fourths.png" alt="Three-quarter view" />
+          <img src="assets/images/01 Three-Fourths.png" alt="Three-quarter view" />
         </div>
         <div className="plate">
           <span className="stamp">REF · 03</span>
           <span className="tag"><b>B</b> Front</span>
-          <img src="images/00 Front.png" alt="Front view" />
+          <img src="assets/images/00 Front.png" alt="Front view" />
         </div>
         <div className="plate">
           <span className="stamp">REF · 04</span>
           <span className="tag"><b>C</b> Side</span>
-          <img src="images/02 Side.png" alt="Side view" />
+          <img src="assets/images/02 Side.png" alt="Side view" />
         </div>
         <div className="plate">
           <span className="stamp">REF · 05</span>
           <span className="tag"><b>D</b> Side · Alt</span>
-          <img src="images/04 Side 2.png" alt="Side alternate view" />
+          <img src="assets/images/04 Side 2.png" alt="Side alternate view" />
         </div>
         <div className="plate">
           <span className="stamp">REF · 06</span>
           <span className="tag"><b>E</b> Back</span>
-          <img src="images/03 Back.png" alt="Back view" />
+          <img src="assets/images/03 Back.png" alt="Back view" />
         </div>
       </div>
 
@@ -1008,27 +1124,27 @@ function App() {
       <div className="grid-6">
         <div className="plate">
           <span className="tag"><b>i</b> Front</span>
-          <img src="images/05 Face Front.png" alt="Face front" />
+          <img src="assets/images/05 Face Front.png" alt="Face front" />
         </div>
         <div className="plate">
           <span className="tag"><b>ii</b> 3/4</span>
-          <img src="images/07 Face Three-Fourths.png" alt="Face 3/4" />
+          <img src="assets/images/07 Face Three-Fourths.png" alt="Face 3/4" />
         </div>
         <div className="plate">
           <span className="tag"><b>iii</b> Side</span>
-          <img src="images/06 Face Side.png" alt="Face side" />
+          <img src="assets/images/06 Face Side.png" alt="Face side" />
         </div>
         <div className="plate">
           <span className="tag"><b>iv</b> No Hair</span>
-          <img src="images/08 Face No Hair.png" alt="Face no hair — mask visibility" />
+          <img src="assets/images/08 Face No Hair.png" alt="Face no hair — mask visibility" />
         </div>
         <div className="plate">
           <span className="tag"><b>v</b> Smile · 3/4</span>
-          <img src="images/10 Face Smile Three-Fourths.png" alt="Smile 3/4" />
+          <img src="assets/images/10 Face Smile Three-Fourths.png" alt="Smile 3/4" />
         </div>
         <div className="plate">
           <span className="tag"><b>vi</b> Smile · Front</span>
-          <img src="images/11 Face Smile Front.png" alt="Smile front" />
+          <img src="assets/images/11 Face Smile Front.png" alt="Smile front" />
         </div>
       </div>
 
@@ -1042,15 +1158,15 @@ function App() {
       <div className="grid-detail">
         <div className="plate" style={{ height: "360px" }}>
           <span className="tag"><b>α</b> Silhouette &amp; Eyes</span>
-          <img src="images/09 Eyes Isolated.png" alt="Silhouette with isolated eyes" />
+          <img src="assets/images/09 Eyes Isolated.png" alt="Silhouette with isolated eyes" />
         </div>
         <div className="plate" style={{ height: "360px" }}>
           <span className="tag"><b>β</b> Expression · Bared</span>
-          <img src="images/11 Face Smile Front.png" alt="Bared teeth expression" />
+          <img src="assets/images/11 Face Smile Front.png" alt="Bared teeth expression" />
         </div>
         <div className="plate" style={{ height: "360px", background: "var(--paper)" }}>
           <span className="tag"><b>γ</b> Palm &amp; Beans</span>
-          <img src="images/12 Palm Beans.png" alt="Palm and beans" style={{ height: "92%" }} />
+          <img src="assets/images/12 Palm Beans.png" alt="Palm and beans" style={{ height: "92%" }} />
         </div>
       </div>
 
@@ -1081,16 +1197,14 @@ function App() {
             Five-stop radial. Pupil ⟶ rim, dark to bright.
           </p>
           <div className="eyestrip">
-            {EYES.map((hex) =>
-            <div key={hex} style={{ background: hex }} data-hex={hex.toUpperCase()} />
-            )}
+            {EYES.map((hex) => <EyeChip key={hex} hex={hex} />)}
           </div>
           <div style={{ marginTop: 18, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 16px", fontFamily: "var(--mono)", fontSize: 10.5, color: "var(--ink-55)", letterSpacing: "0.06em" }}>
-            <div>01 · Pupil</div><div style={{ textAlign: "right" }}>#000000</div>
-            <div>02 · Inner</div><div style={{ textAlign: "right" }}>#150B18</div>
-            <div>03 · Mid</div><div style={{ textAlign: "right" }}>#5B377C</div>
-            <div>04 · Outer</div><div style={{ textAlign: "right" }}>#8A56BF</div>
-            <div>05 · Rim</div><div style={{ textAlign: "right" }}>#D088F1</div>
+            <div>01 · Pupil</div><CopyHex hex="#000000" style={{ textAlign: "right" }} />
+            <div>02 · Inner</div><CopyHex hex="#150B18" style={{ textAlign: "right" }} />
+            <div>03 · Mid</div><CopyHex hex="#5B377C" style={{ textAlign: "right" }} />
+            <div>04 · Outer</div><CopyHex hex="#8A56BF" style={{ textAlign: "right" }} />
+            <div>05 · Rim</div><CopyHex hex="#D088F1" style={{ textAlign: "right" }} />
           </div>
         </div>
       </div>
@@ -1105,7 +1219,7 @@ function App() {
       <div className="glyphs">
         <div className="glyph-card">
           <span className="corner-no">G · 01</span>
-          <div className="glyph" style={{ WebkitMaskImage: "url(images/glyph-sun-moon.png)", maskImage: "url(images/glyph-sun-moon.png)" }} />
+          <div className="glyph" style={{ WebkitMaskImage: "url(assets/images/glyph-sun-moon.png)", maskImage: "url(assets/images/glyph-sun-moon.png)" }} />
           <div className="glyph-meta">
             <div className="name">Sun &amp; Moon</div>
             <div className="tag">L. shoulder</div>
@@ -1114,7 +1228,7 @@ function App() {
         </div>
         <div className="glyph-card">
           <span className="corner-no">G · 02</span>
-          <div className="glyph" style={{ WebkitMaskImage: "url(images/glyph-sun-moon-2.png)", maskImage: "url(images/glyph-sun-moon-2.png)" }} />
+          <div className="glyph" style={{ WebkitMaskImage: "url(assets/images/glyph-sun-moon-2.png)", maskImage: "url(assets/images/glyph-sun-moon-2.png)" }} />
           <div className="glyph-meta">
             <div className="name">Radiant Disc</div>
             <div className="tag">R. shoulder</div>
@@ -1123,7 +1237,7 @@ function App() {
         </div>
         <div className="glyph-card">
           <span className="corner-no">G · 03</span>
-          <div className="glyph wide" style={{ WebkitMaskImage: "url(images/glyph-snake-skin.png)", maskImage: "url(images/glyph-snake-skin.png)" }} />
+          <div className="glyph wide" style={{ WebkitMaskImage: "url(assets/images/glyph-snake-skin.png)", maskImage: "url(assets/images/glyph-snake-skin.png)" }} />
           <div className="glyph-meta">
             <div className="name">Scale Band</div>
             <div className="tag">Both biceps · cuff</div>
@@ -1195,6 +1309,13 @@ function App() {
         <TweakRadio label="Hue" value={t.accent}
         options={["plum", "indigo", "ember", "bone"]}
         onChange={(v) => setTweak("accent", v)} />
+        {show3D && <>
+          <TweakSection label="3D · Model" />
+          <TweakSlider label="Exposure" value={exposure} min={0.5} max={3} step={0.1}
+            onChange={setExposure} />
+          <TweakSlider label="Emissive" value={emissiveBoost} min={1} max={10} step={0.5}
+            onChange={setEmissiveBoost} />
+        </>}
       </TweaksPanel>
     </div>);
 

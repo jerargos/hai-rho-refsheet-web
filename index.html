@@ -584,6 +584,52 @@
   }
   .colophon a:hover { border-bottom-color: var(--accent); }
 
+  /* ── View toggle (2D / 3D) ──────────────────────────── */
+  .view-toggle {
+    position: absolute; bottom: 10px; right: 12px; z-index: 3;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background .18s, color .18s, border-color .18s, box-shadow .18s;
+  }
+  .view-toggle.off {
+    background: color-mix(in oklab, var(--accent) 8%, var(--paper));
+    color: var(--accent);
+    border: 1px solid color-mix(in oklab, var(--accent) 55%, transparent);
+    box-shadow: 0 0 0 2.5px color-mix(in oklab, var(--accent) 12%, transparent);
+  }
+  .view-toggle.off:hover {
+    background: color-mix(in oklab, var(--accent) 16%, var(--paper));
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 18%, transparent),
+                0 2px 10px color-mix(in oklab, var(--accent) 22%, transparent);
+  }
+  .view-toggle.on {
+    background: var(--accent);
+    color: var(--paper);
+    border: 1px solid var(--accent);
+    box-shadow: 0 2px 10px color-mix(in oklab, var(--accent) 38%, transparent);
+  }
+  .view-toggle.on:hover {
+    background: color-mix(in oklab, var(--accent) 82%, var(--ink));
+    box-shadow: 0 2px 14px color-mix(in oklab, var(--accent) 50%, transparent);
+  }
+  .view-opts-btn {
+    position: absolute; bottom: 10px; z-index: 3;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    background: var(--paper);
+    color: var(--ink-55);
+    border: 1px solid var(--ink-30);
+    transition: background .15s, color .15s;
+  }
+  .view-opts-btn:hover { background: var(--ink-08); color: var(--ink); }
+  .view-opts-btn.active { background: var(--ink-15); }
+
   /* ── Footer ─────────────────────────────────────────── */
   .crosshair {
     position: absolute;
@@ -782,116 +828,25 @@
 <div id="root"></div>
 
 <script type="text/babel">
-/* ── Tweaks panel (inlined) ──────────────────────────── */
 
-const STORAGE_KEY = "hai-rho-tweaks";
-
-function useTweaks(defaults) {
-  const [state, setState] = React.useState(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      return saved ? { ...defaults, ...saved } : { ...defaults };
-    } catch {
-      return { ...defaults };
-    }
-  });
-
-  const setTweak = React.useCallback((key, value) => {
-    setState(prev => {
-      const next = { ...prev, [key]: value };
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch {}
-      return next;
-    });
-  }, []);
-
-  return [state, setTweak];
-}
-
-function TweaksPanel({ title, children }) {
-  const [open, setOpen] = React.useState(false);
-  return (
-    <div style={{
-      position: "fixed", bottom: 20, right: 20, zIndex: 9999,
-      fontFamily: "var(--mono)", fontSize: 11,
-    }}>
-      {open && (
-        <div style={{
-          background: "var(--paper)", border: "0.5px solid var(--ink-30)",
-          padding: "16px 18px 18px", marginBottom: 8, minWidth: 220,
-          boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
-        }}>
-          <div style={{ fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase",
-            color: "var(--ink-55)", marginBottom: 14, fontSize: 10 }}>{title}</div>
-          {children}
-        </div>
-      )}
-      <button onClick={() => setOpen(o => !o)} style={{
-        display: "block", marginLeft: "auto",
-        background: "var(--paper)", border: "0.5px solid var(--ink-30)",
-        color: "var(--ink-55)", fontFamily: "var(--mono)", fontSize: 10,
-        letterSpacing: "0.14em", textTransform: "uppercase",
-        padding: "6px 12px", cursor: "pointer",
-      }}>
-        {open ? "Close" : "Tweaks"}
-      </button>
-    </div>
-  );
-}
-
-function TweakSection({ label }) {
-  return (
-    <div style={{
-      fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase",
-      color: "var(--accent)", fontSize: 9.5, marginTop: 12, marginBottom: 6,
-    }}>{label}</div>
-  );
-}
-
-function TweakSlider({ label, value, min, max, step, onChange }) {
-  return (
-    <div style={{ marginBottom: 8 }}>
-      <div style={{ display: "flex", justifyContent: "space-between",
-        color: "var(--ink-55)", letterSpacing: "0.12em", textTransform: "uppercase",
-        fontSize: 9.5, marginBottom: 4 }}>
-        <span>{label}</span><span style={{ color: "var(--ink)" }}>{value.toFixed(1)}</span>
-      </div>
-      <input type="range" min={min} max={max} step={step} value={value}
-        onChange={e => onChange(parseFloat(e.target.value))}
-        style={{ width: "100%", accentColor: "var(--accent)", margin: 0 }} />
-    </div>
-  );
-}
-
-function TweakRadio({ label, value, options, onChange }) {
-  return (
-    <div style={{ marginBottom: 4 }}>
-      <div style={{ color: "var(--ink-55)", letterSpacing: "0.12em",
-        textTransform: "uppercase", fontSize: 9.5, marginBottom: 5 }}>{label}</div>
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-        {options.map(opt => (
-          <button key={opt} onClick={() => onChange(opt)} style={{
-            padding: "3px 10px", fontSize: 10, letterSpacing: "0.1em",
-            textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--mono)",
-            background: value === opt ? "var(--accent)" : "transparent",
-            color: value === opt ? "var(--paper)" : "var(--ink-55)",
-            border: value === opt ? "0.5px solid var(--accent)" : "0.5px solid var(--ink-30)",
-          }}>
-            {opt}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
 </script>
 <script type="text/babel">
 
 
-const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "paper": "cool",
-  "ink": "coal",
-  "accent": "plum"
-}/*EDITMODE-END*/;
+const MODEL_ENC_URL = "https://pub-06ddcb0ce89a428483be74b6d0071c73.r2.dev/assets/HaiRho_Civet_00.enc";
+const MODEL_KEY_B64 = "PiojI+Po3tc5wcU+pClV2Jo5OgMu0Q49mzmsl9khJvc=";
+
+async function loadEncryptedModel(url, keyB64) {
+  const buf = await fetch(url).then(r => r.arrayBuffer());
+  const keyBytes = Uint8Array.from(atob(keyB64), c => c.charCodeAt(0));
+  const key = await crypto.subtle.importKey('raw', keyBytes, 'AES-GCM', false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv: new Uint8Array(buf, 0, 12) },
+    key,
+    buf.slice(12)
+  );
+  return URL.createObjectURL(new Blob([plain], { type: 'model/gltf-binary' }));
+}
 
 function CopyHex({ hex, className, style }) {
   const [copied, setCopied] = React.useState(false);
@@ -954,19 +909,24 @@ function Swatch({ name, hex }) {
 }
 
 function App() {
-  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [show3D, setShow3D] = React.useState(false);
+  const [show3DOptions, setShow3DOptions] = React.useState(false);
+  const [modelSrc, setModelSrc] = React.useState(null);
+  const [modelDecrypting, setModelDecrypting] = React.useState(false);
   const modelViewerRef = React.useRef(null);
   const origEmissive = React.useRef(null);
   const [emissiveBoost, setEmissiveBoost] = React.useState(3);
   const [exposure, setExposure] = React.useState(1.2);
 
+  // Fetch and decrypt the model the first time 3D is shown
   React.useEffect(() => {
-    const root = document.documentElement;
-    root.style.setProperty("--paper", `var(--paper-${t.paper})`);
-    root.style.setProperty("--ink", `var(--ink-${t.ink})`);
-    root.style.setProperty("--accent", `var(--acc-${t.accent})`);
-  }, [t.paper, t.ink, t.accent]);
+    if (!show3D || modelSrc) return;
+    setModelDecrypting(true);
+    loadEncryptedModel(MODEL_ENC_URL, MODEL_KEY_B64)
+      .then(url => setModelSrc(url))
+      .catch(e => console.error('Model decryption failed', e))
+      .finally(() => setModelDecrypting(false));
+  }, [show3D]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Store original emissive factors when model loads, then apply initial boost
   React.useEffect(() => {
@@ -1033,37 +993,74 @@ function App() {
       <div className="hero">
         <div className="plate main">
           <span className="stamp">REF · 01</span>
-          <span className="tag"><b>01</b> {show3D ? '3D · Interactive' : 'Pose · Smile'}</span>
+          <span className="tag"><b>01</b> {show3D ? (modelDecrypting ? '3D · Loading…' : '3D · Interactive') : 'Pose · Smile'}</span>
           <button
             onClick={() => setShow3D(s => !s)}
-            style={{
-              position: 'absolute', bottom: 10, right: 12, zIndex: 3,
-              fontFamily: 'var(--mono)', fontSize: 10,
-              letterSpacing: '0.14em', textTransform: 'uppercase',
-              background: show3D ? 'var(--accent)' : 'var(--paper)',
-              color: show3D ? 'var(--paper)' : 'var(--ink-55)',
-              border: `0.5px solid ${show3D ? 'var(--accent)' : 'var(--ink-30)'}`,
-              padding: '4px 10px', cursor: 'pointer',
-            }}
+            className={`view-toggle ${show3D ? 'on' : 'off'}`}
           >
             {show3D ? '2D' : '3D'}
           </button>
+          {show3D && (
+            <>
+              <button
+                onClick={() => setShow3DOptions(o => !o)}
+                className={`view-opts-btn ${show3DOptions ? 'active' : ''}`}
+                style={{ right: 72 }}
+              >Options</button>
+              {show3DOptions && (
+                <div style={{
+                  position: 'absolute', bottom: 44, right: 12, zIndex: 4,
+                  background: 'var(--paper)', border: '0.5px solid var(--ink-30)',
+                  padding: '12px 14px', minWidth: 180,
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.10)',
+                  fontFamily: 'var(--mono)', fontSize: 10,
+                }}>
+                  {[
+                    { label: 'Exposure', value: exposure, min: 0.5, max: 3, step: 0.1, set: setExposure },
+                    { label: 'Emissive', value: emissiveBoost, min: 1, max: 10, step: 0.5, set: setEmissiveBoost },
+                  ].map(({ label, value, min, max, step, set }) => (
+                    <div key={label} style={{ marginBottom: 10 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between',
+                        color: 'var(--ink-55)', letterSpacing: '0.12em', textTransform: 'uppercase',
+                        fontSize: 9.5, marginBottom: 4 }}>
+                        <span>{label}</span><span style={{ color: 'var(--ink)' }}>{value.toFixed(1)}</span>
+                      </div>
+                      <input type="range" min={min} max={max} step={step} value={value}
+                        onChange={e => set(parseFloat(e.target.value))}
+                        style={{ width: '100%', accentColor: 'var(--accent)', margin: 0 }} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
           {show3D ? (
-            <model-viewer
-              ref={modelViewerRef}
-              src="assets/HaiRho_Civet_00.glb"
-              alt="Hai Rho 3D model"
-              auto-rotate=""
-              camera-controls=""
-              shadow-intensity="1"
-              exposure={`${exposure}`}
-              style={{
-                width: '100%', height: '100%',
-                position: 'absolute', top: 0, left: 0,
-                zIndex: 1,
+            modelDecrypting ? (
+              <div style={{
+                position: 'absolute', inset: 0, zIndex: 1,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: 'var(--paper)',
-              }}
-            />
+                fontFamily: 'var(--mono)', fontSize: 10,
+                letterSpacing: '0.16em', textTransform: 'uppercase',
+                color: 'var(--ink-55)',
+              }}>Loading…</div>
+            ) : (
+              <model-viewer
+                ref={modelViewerRef}
+                src={modelSrc}
+                alt="Hai Rho 3D model"
+                auto-rotate=""
+                camera-controls=""
+                shadow-intensity="1"
+                exposure={`${exposure}`}
+                style={{
+                  width: '100%', height: '100%',
+                  position: 'absolute', top: 0, left: 0,
+                  zIndex: 1,
+                  background: 'var(--paper)',
+                }}
+              />
+            )
           ) : (
             <img src="assets/images/13 Pose Smile.png" alt="Hai Rho — pose smile" />
           )}
@@ -1296,27 +1293,6 @@ function App() {
         <div className="right">Plate count · 13 · v01</div>
       </footer>
 
-      <TweaksPanel title="Tweaks">
-        <TweakSection label="Paper" />
-        <TweakRadio label="Tone" value={t.paper}
-        options={["cool", "cream", "bone"]}
-        onChange={(v) => setTweak("paper", v)} />
-        <TweakSection label="Ink" />
-        <TweakRadio label="Tone" value={t.ink}
-        options={["coal", "charcoal"]}
-        onChange={(v) => setTweak("ink", v)} />
-        <TweakSection label="Accent" />
-        <TweakRadio label="Hue" value={t.accent}
-        options={["plum", "indigo", "ember", "bone"]}
-        onChange={(v) => setTweak("accent", v)} />
-        {show3D && <>
-          <TweakSection label="3D · Model" />
-          <TweakSlider label="Exposure" value={exposure} min={0.5} max={3} step={0.1}
-            onChange={setExposure} />
-          <TweakSlider label="Emissive" value={emissiveBoost} min={1} max={10} step={0.5}
-            onChange={setEmissiveBoost} />
-        </>}
-      </TweaksPanel>
     </div>);
 
 }
